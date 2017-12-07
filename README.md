@@ -74,8 +74,13 @@ Lastly, the relaxed density field needs to be mapped into atomic coordinates. On
 References
 
 [1] Provatas and Elder, Phase-Field Methods in Materials Science and Engineering (Wiley-VCH, 2010).
+
 [2] Hirvonen et al., Physical Review B 94, 035414 (2016); Fan et al., Nano Letters 17, 5919-5924 (2017); Azizi et al., Carbon 125, 384-390 (2017).
+
 [3] Zhang et al., Extreme Mechanics Letters 1, 3-8 (2014).
+
 [4] Elder et al., Physical Review Letters 88, 245701 (2002).
+
 [5] MPI Forum, website. Available (visited December 7, 2017): http://mpi-forum.org/ .
+
 [6] FFTW, website. Available (visited December 7, 2017): http://www.fftw.org/ .
