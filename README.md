@@ -39,7 +39,7 @@ The user can control all of the model parameters and also choose between conserv
 
 In the relaxation settings, the user defines the number of iterations for the relaxation, spatial discretization and time step, and the interval between calculation box size optimizations. The latter tries to eliminate the mismatch between the system and the box. In practice, it varies the box size slightly, records the resulting changes in energy and uses quadratic interpolation to guess an optimal box size.
 
-The code can be compiled with the command
+The code can be compiled with the command (assuming MPI and FFTW are installed)
 
 mpicc pfc.c -lfftw3_mpi -lfftw3 -lm -Ofast -Wall -o pfc
 
