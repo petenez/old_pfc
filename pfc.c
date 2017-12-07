@@ -233,7 +233,7 @@ void read_state(struct Arrays *arrays, FILE *file, double p, double A) {
 			for(w = 0; w < arrays->W; w++) {
 				if(fscanf(file, "%lf", &arrays->q[k+w]) != 1) {
 					printf("Invalid data for initialization!\n");
-					exit(2);
+					exit(3);
 				}
 				p0 += arrays->q[k+w];
 				if(arrays->q[k+w] < Amin) Amin = arrays->q[k+w];
@@ -245,7 +245,7 @@ void read_state(struct Arrays *arrays, FILE *file, double p, double A) {
 				// fast-forward over other processes' chunks
 				if(fscanf(file, "%lf", &dummy) != 1) {
 					printf("Invalid data for initialization!\n");
-					exit(2);
+					exit(3);
 				}
 			}
 		}
@@ -287,10 +287,14 @@ void initialize_system(struct Arrays *arrays, FILE *input) {
 		char filename[128];
 		double p, A;
 		if(fscanf(input, " %s %lf %lf", filename, &p, &A) != 3) {
-			printf("Invalid data file name!\n");
+			printf("Invalid initialization parameters!\n");
 			exit(1);
 		}
 		FILE *file = fopen(filename, "r");
+		if(file == NULL) {
+			printf("Data file not found!\n");
+			exit(2);
+		}
 		read_state(arrays, file, p, A);
 	}
 }
@@ -555,8 +559,8 @@ int main(int argc, char **argv) {
 	sprintf(filename, "%s.in", output.name);
 	FILE *input = fopen(filename, "r");
 	if(input == NULL) {
-		printf("Error: Input file not found!\n");
-		return 1;
+		printf("Input file not found!\n");
+		return 2;
 	}
 	// create empty output file
 	sprintf(filename, "%s.out", output.name);
