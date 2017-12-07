@@ -7,7 +7,7 @@ Phase field crystal (PFC) models are a family of continuum methods for modeling 
 
 Purpose of code
 
-In short, this code is intended for generating highly-relaxed and realistic model systems of polycrystalline graphene. The model systems are initialized with a crude initial guess and are then relaxed to equilibrium using PFC. The resulting PFC density fields can be mapped into atomic coordinates and studied further using atomistic methods. I have some codes for the mapping step, but they are messy and complicated, and not yet ready for publication. I describe in the last section how to approach this step.
+In short, this code is intended for generating highly-relaxed and realistic model systems of polycrystalline graphene. I give no promises of developing this code actively. The model systems are initialized with a crude initial guess and are then relaxed to equilibrium using PFC. The resulting PFC density fields can be mapped into atomic coordinates and studied further using atomistic methods. I have some codes for the mapping step, but they are messy and complicated, and not yet ready for publication. I describe in the last section how to approach this step.
 
 Model
 
