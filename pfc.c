@@ -29,12 +29,12 @@ struct Arrays {
 	ptrdiff_t lh0;		// local vertical start index
 	ptrdiff_t lw0;		// local horizontal start index
 	
-	double *A;		// operator for linear part, e^{-k^2 \hat{\mathcal{L}} \Delta t} (graphene)
+	double *A;		// operator for linear part, e^{-k^2 \hat{\mathcal{L}} \Delta t}
 	double *B;		// operator for nonlinear part ...
 	double *p;		// array for \psi_C
 	double *q;		// another array
 	
-	fftw_plan p_P;	// FFTW plan for F(p) (graphene)
+	fftw_plan p_P;	// FFTW plan for F(p)
 	fftw_plan q_Q;	// F(q)
 	fftw_plan Q_q;	// F^-1(Q)
 };
@@ -295,8 +295,7 @@ void initialize_system(struct Arrays *arrays, FILE *input) {
 	}
 }
 
-// saves state into a file, format:
-// C field, B field, N field, smoothed density (graphene), smoothed density (HBN), \Delta\phi (see documentation)
+// saves state into a file
 void write_state(struct Arrays *arrays, struct Relaxation *relaxation, struct Output *output) {
 	char filename[128];			// filename
 	sprintf(filename, "%s-t:%d.dat", output->name, relaxation->t);
