@@ -1,34 +1,34 @@
-## pfc
-# High-performance phase field crystal (PFC) code for generating realistic model systems of polycrystalline graphene.
+# pfc
+## High-performance phase field crystal (PFC) code for generating realistic model systems of polycrystalline graphene.
 
-# Background
+## Background
 
 Phase field crystal (PFC) models are a family of continuum methods for modeling the microstructure and its evolution in polycrystalline materials. The basics of phase field crystal (PFC) models are covered in the book by Provatas and Elder [1], for example. PFC comes with attractive multiscale characteristics - it gives simultaneous access to atomistic and mesoscopic length scales and to long time scales. This makes it ideal for modeling realistic microstructures and their evolution. Conventional atomistic techniques on the other hand have severe length and/or time scale limitations in this respect. We have exploited the standard one-mode PFC model for generating model systems of polycrystalline graphene for further atomistic calculations employing molecular dynamics (MD) and quantum-mechanical density functional theory [2]. Previously, Zhang et al. had used PFC similarly for generating model systems of defect-engineered graphene to initialize atomistic calculations [3].
 
 
-# Purpose of code
+## Purpose of code
 
 In short, this code is intended for generating highly-relaxed and realistic model systems of polycrystalline graphene. I give no promises of developing this code actively. The model systems are initialized with a crude initial guess and are then relaxed to equilibrium using PFC. The resulting PFC density fields can be mapped into atomic coordinates and studied further using atomistic methods. I have some codes for the mapping step, but they are messy and complicated, and not yet ready for publication. I describe in the last section how to approach this step.
 
 
-# Model
+## Model
 
 The code implements the standard one-mode model [4] with one controlled length scale. Its free energy is given by
-
+```
 F = int dr (psi/2*(alpha + beta*(1 + nabla^2)^2)*psi + gamma*psi^3/3 + delta*psi^4/4).
-
+```
 Here, psi is the density field that describes the system. Of the parameters, alpha is proportional to temperature and nabla^2 is the Laplacian. Besides the model parameters, average density also has a significant influence on the behavior of the model. Both conserved
-
+```
 dpsi/dt = nabla^2 dF/dpsi
-
+```
 and nonconserved dynamics
-
+```
 dpsi/dt = - dF/dpsi
-
+```
 can be used. Former conserves the average density of the initial state and is diffusive, whereas latter does not conserve the average density and follows the steepest descent path in energy. The semi-implicit spectral method [1] is used to solve these differential equations numerically. Periodic boundary conditions ensue from spectral treatment. For simplicity, the code is limited to planar and freestanding systems.
 
 
-# Implementation
+## Implementation
 
 The code is written in C and exploits MPI [5] and FFTW [6] for efficient and parallelizable computation. It requires little memory and scales well over multiple cores and nodes. Relatively large systems can be modeled even on a laptop. The code is simple, but not very user-friendly in the sense that few safeguards have been implemented against misuse. It does, however, give some error messages for invalid input. 
 
@@ -63,7 +63,7 @@ java -jar plotter.jar dummy-t:# dummy-t:# 512 512 0 1000 10000
 where the hashtags will be substituted with numbers going through 0, 1000, 2000, ..., 10000. The plotter can also be used to visualize complex-valued data (which the PFC code does not produce, however).
 
 
-# Practical considerations
+## Practical considerations
 
 To generate model systems of polycrystalline graphene for further atomistic calculations, the code gives three options: start with (1) random noise, (2) crystallites or (3) a polycrystalline state. Starting with a random state and waiting for coarsening of the emerging grain structure is feasible, but can take an unpractical amount of time. Starting with crystallites (crystallite radius << their separation) that grow in a constant density phase is much faster. The fastest is to begin with a polycrystalline state (crystalline radius >~ their separation), but here the grain structure is a bit more constrained compared to the crystallite growth alternative.
 
@@ -76,7 +76,7 @@ The two sample input files demonstrate a quick two-stage process where crystalli
 Lastly, the relaxed density field needs to be mapped into atomic coordinates. One can do this naively by associating all local maxima with atom positions. However, this results in a large number of missing atoms along grain boundaries. A much more robust approach is to locate all triplets of local minima whose members are closest neighbors to each other and to place an atom at the center.
 
 
-# References
+## References
 
 [1] Provatas and Elder, Phase-Field Methods in Materials Science and Engineering (Wiley-VCH, 2010).
 
