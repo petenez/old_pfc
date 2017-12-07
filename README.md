@@ -12,11 +12,17 @@ In short, this code is intended for generating highly-relaxed and realistic mode
 Model
 
 The code implements the standard one-mode model [4] with one controlled length scale. Its free energy is given by
+
 F = int dr (psi/2*(alpha + beta*(1 + nabla^2)^2)*psi + gamma*psi^3/3 + delta*psi^4/4).
+
 Here, psi is the density field that describes the system. Of the parameters, alpha is proportional to temperature and nabla^2 is the Laplacian. Besides the model parameters, average density also has a significant influence on the behavior of the model. Both conserved
+
 dpsi/dt = nabla^2 dF/dpsi
+
 and nonconserved dynamics
+
 dpsi/dt = - dF/dpsi
+
 can be used. Former conserves the average density of the initial state and is diffusive, whereas latter does not conserve the average density and follows the steepest descent path in energy. The semi-implicit spectral method [1] is used to solve these differential equations numerically. Periodic boundary conditions ensue from spectral treatment. For simplicity, the code is limited to planar and freestanding systems.
 
 Implementation
@@ -34,15 +40,23 @@ The user can control all of the model parameters and also choose between conserv
 In the relaxation settings, the user defines the number of iterations for the relaxation, spatial discretization and time step, and the interval between calculation box size optimizations. The latter tries to eliminate the mismatch between the system and the box. In practice, it varies the box size slightly, records the resulting changes in energy and uses quadratic interpolation to guess an optimal box size.
 
 The code can be compiled with the command
+
 mpicc pfc.c -lfftw3_mpi -lfftw3 -lm -Ofast -Wall -o pfc
+
 and run by
+
 mpirun -np 8 pfc case
+
 Here -np 8 indicates that eight CPUs will be used for the computation. The text string "case" is the name for the study case - the input file must be "case.in", numerical output appears in "case.out" and data files begin with "case".
 
 A plotter tool written in Java is also provided for visualization of the systems modeled. I typically compile it into a JAR file (also provided). For a 512-by-512 case "dummy" it can be run as
+
 java -jar plotter.jar dummy-t:0[.dat] dummy-t:0[.png] 512 512
+
 where the output image file is specified. Note that the file extensions can be omitted - the tool appends the text strings with ".dat" and ".png" by default. It can also be used in batch mode
+
 java -jar plotter.jar dummy-t:# dummy-t:# 512 512 0 1000 10000
+
 where the hashtags will be substituted with numbers going through 0, 1000, 2000, ..., 10000. The plotter can also be used to visualize complex-valued data (which the PFC code does not produce, however).
 
 Practical considerations
