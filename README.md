@@ -75,7 +75,7 @@ References
 
 [1] Provatas and Elder, Phase-Field Methods in Materials Science and Engineering (Wiley-VCH, 2010).
 
-[2] Hirvonen et al., Physical Review B 94, 035414 (2016); Fan et al., Nano Letters 17, 5919-5924 (2017); Azizi et al., Carbon 125, 384-390 (2017).
+[2] Hirvonen et al., Physical Review B 94, 035414 (2016); Hirvonen et al., Scientific Reports 7, 4754 (2017); Fan et al., Nano Letters 17, 5919-5924 (2017); Azizi et al., Carbon 125, 384-390 (2017).
 
 [3] Zhang et al., Extreme Mechanics Letters 1, 3-8 (2014).
 
