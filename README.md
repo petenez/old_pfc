@@ -81,7 +81,7 @@ The choice of model parameters and average density strongly influences the growt
 
 The dynamics also play a role: conserved dynamics is diffusive, whereas nonconserved dynamics follows the steepest descent path in energy. Latter is somewhat similar to quenching as it is more likely to eventually get stuck in a metastable state. However, temperature is built in in the model so, strictly speaking, this is not quenching. Furthermore, PFC displays Peierls barriers whereby conserved dynamics can also, in principle, get stuck, but in practice coarsening rarely stops.
 
-The two sample input files demonstrate a quick two-stage process where crystallites are first grown close to melting and the resulting polycrystalline system is then relaxed further from melting. The first step exploits conserved and the second nonconserved dynamics. Calculation box size optimization is also employed for the second stage. The shell script provided in the folder "example" compiles the PFC code, runs the two relaxation steps and plots their results. In the same folder, sample output from the "coordinator" tool is also given.
+The two sample input files demonstrate a quick two-stage process where crystallites are first grown close to melting and the resulting polycrystalline system is then relaxed further from melting. The first step exploits conserved and the second nonconserved dynamics. Calculation box size optimization is also employed for the second stage. The shell script provided in the folder "example" compiles the PFC code, runs the two relaxation steps and plots their results. In the same folder, sample output from the "coordinator" tool is also given. [This video](https://youtu.be/F6TCFxtcS7o) demonstrates a similar process.
 
 
 ## Citing this code
