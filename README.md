@@ -3,12 +3,12 @@
 
 ## Background
 
-Phase field crystal (PFC) models are a family of continuum methods for modeling the microstructure and its evolution in polycrystalline materials. The basics of phase field crystal (PFC) models are covered in the book by Provatas and Elder [1], for example. PFC comes with attractive multiscale characteristics - it gives simultaneous access to atomistic and mesoscopic length scales and to long time scales. This makes it ideal for modeling realistic microstructures and their evolution. Conventional atomistic techniques on the other hand have severe length and/or time scale limitations in this respect. We have exploited the standard one-mode PFC model for generating model systems of polycrystalline graphene for further atomistic calculations employing molecular dynamics (MD) and quantum-mechanical density functional theory [2]. Previously, Zhang et al. had used PFC similarly for generating model systems of defect-engineered graphene to initialize atomistic calculations [3].
+Phase field crystal (PFC) models are a family of continuum methods for modeling the microstructure and its evolution in polycrystalline materials. The basics of phase field crystal (PFC) models are covered in the book by Provatas and Elder [1], for example. PFC comes with attractive multiscale characteristics - it gives simultaneous access to atomistic and mesoscopic length scales and to long time scales. This makes it ideal for modeling realistic microstructures and their evolution. Conventional atomistic techniques on the other hand have severe length and/or time scale limitations in this respect. We have exploited the standard one-mode PFC model for generating model systems of polycrystalline graphene for further atomistic calculations employing molecular dynamics (MD) and quantum-mechanical density functional theory [2]. For the MD simulations we used the highly efficient  and freely available [GPUMD](https://github.com/brucefan1983/GPUMD) code. Previously, Zhang et al. had used PFC similarly for generating model systems of defect-engineered graphene to initialize atomistic calculations [3].
 
 
 ## Purpose of code
 
-In short, this code is intended for generating highly-relaxed and realistic model systems of polycrystalline graphene. I give no promises of developing this code actively. The model systems are initialized with a crude initial guess and are then relaxed to equilibrium using PFC. The resulting PFC density fields can be mapped into atomic coordinates and studied further using atomistic methods. I have some codes for the mapping step, but they are messy and complicated, and not yet ready for publication. I describe in the last section how to approach this step.
+In short, this code is intended for generating highly-relaxed and realistic model systems of polycrystalline graphene. The model systems are initialized with a crude initial guess and are then relaxed to equilibrium using PFC. The resulting PFC density fields can be mapped into atomic coordinates and studied further using atomistic methods. A tool - "coordinator - for the mapping step is provided, as well as a visualization tool - "plotter". I give no promises of developing this project actively.
 
 
 ## Model
@@ -52,7 +52,17 @@ mpirun -np 8 pfc case
 ```
 Here -np 8 indicates that eight CPUs will be used for the computation. The text string "case" is the name for the study case - the input file must be "case.in", numerical output appears in "case.out" and data files begin with "case".
 
-A plotter tool written in Java is also provided for visualization of the systems modeled. I typically compile it into a JAR file (also provided). For a 512-by-512 case "dummy" it can be run as
+#### Java tools
+
+A tool written in Java for mapping the PFC density fields into atomic coordinates for further atomistic calculations is provided. It's composed of the classes "Coordinator", "Point" and "V". For a 512-by-512 case "dummy" it can be run as
+```
+java -jar coordinator.jar dummy-t:1000.dat 512 512 0.7 0.7 7.3 2.46 dummy-t:1000.xy dummy-t:1000.nh
+```
+Here, the data file and its dimensions are first specified, next the spatial discretization of the PFC system. Next, the dimensionless lattice constant is specified. This is roughly 4pi/sqrt(3) ~ 7.3, but varies slightly with model parameters. This quantity can be measured, for example, by initializing a very small system (accommodating only a few unit cells) with random noise (most likely, a single-crystalline state emerges) and by using the calculation box size optimization to eliminate strain. Now, if the grid is Lx points wide with discretization dx and the crystal is nx unit cells wide in that direction, then the dimenionless lattice constant lPFC = Lx*dx/nx. This value doesn't need to be exact (the output coordinates will simply be scaled by a constant factor directly proportional to the error in the estimate for lPFC), but if it's way off, this can slow down execution or even result in failure. This is because the system is divided into bins (whose size is determined automatically based on lPFC and Lx, Ly, dx and dy) to speed up finding neighbors. There is, however, quite a lot of safety margin - just stay within, say, 10% of 4pi/sqrt(3). Next, the "true" lattice constant is specified in ångströms - substitute the approximate value of 2.46 Å with the equilibrium lattice constant given by your atomistic method. Finally, the names for the output files are specified. Former lists the carbon atoms by their number, their coordinates and the numbers of their neighbors. Latter lists the nonhexagonal carbon atom rings by the numbers of their member carbons.
+
+Note that this tool is inteded for PFC density fields relaxed far from melting where the defects are quite well defined and not very fuzzy. For such systems, each carbon tends to have three neighbors and only 5-, 6- and 7-membered carbon rings are observed.
+
+A plotter tool is also provided for visualization of the systems modeled. For a 512-by-512 case "dummy" it can be run as
 ```
 java -jar plotter.jar dummy-t:0[.dat] dummy-t:0[.png] 512 512
 ```
@@ -71,9 +81,12 @@ The choice of model parameters and average density strongly influences the growt
 
 The dynamics also play a role: conserved dynamics is diffusive, whereas nonconserved dynamics follows the steepest descent path in energy. Latter is somewhat similar to quenching as it is more likely to eventually get stuck in a metastable state. However, temperature is built in in the model so, strictly speaking, this is not quenching. Furthermore, PFC displays Peierls barriers whereby conserved dynamics can also, in principle, get stuck, but in practice coarsening rarely stops.
 
-The two sample input files demonstrate a quick two-stage process where crystallites are first grown close to melting and the resulting polycrystalline system is then relaxed further from melting. The first step exploits conserved and the second nonconserved dynamics. Calculation box size optimization is also employed for the second stage. The shell script provided compiles the PFC code, runs the two relaxation steps and plots their results.
+The two sample input files demonstrate a quick two-stage process where crystallites are first grown close to melting and the resulting polycrystalline system is then relaxed further from melting. The first step exploits conserved and the second nonconserved dynamics. Calculation box size optimization is also employed for the second stage. The shell script provided in the folder "example" compiles the PFC code, runs the two relaxation steps and plots their results. In the same folder, sample output from the "coordinator" tool is also given.
 
-Lastly, the relaxed density field needs to be mapped into atomic coordinates. One can do this naively by associating all local maxima with atom positions. However, this results in a large number of missing atoms along grain boundaries. A much more robust approach is to locate all triplets of local minima whose members are closest neighbors to each other and to place an atom at the center.
+
+## Citing this code
+
+If you use this code, I kindly ask you to cite this repository and our paper [7] where we first employ a similar approach to generating the model systems.
 
 
 ## References
@@ -89,3 +102,5 @@ Lastly, the relaxed density field needs to be mapped into atomic coordinates. On
 [5] MPI Forum, website. Available (visited December 7, 2017): http://mpi-forum.org/ .
 
 [6] FFTW, website. Available (visited December 7, 2017): http://www.fftw.org/ .
+
+[7] Hirvonen et al., Physical Review B 94, 035414 (2016)
