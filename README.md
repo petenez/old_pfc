@@ -60,7 +60,7 @@ java -jar coordinator.jar dummy-t:1000.dat 512 512 0.7 0.7 7.3 2.46 dummy-t:1000
 ```
 Here, the data file and its dimensions are first specified, next the spatial discretization of the PFC system. Next, the dimensionless lattice constant is specified. This is roughly 4pi/sqrt(3) ~ 7.3, but varies slightly with model parameters. This quantity can be measured, for example, by initializing a very small system (accommodating only a few unit cells) with random noise (most likely, a single-crystalline state emerges) and by using the calculation box size optimization to eliminate strain. Now, if the grid is Lx points wide with discretization dx and the crystal is nx unit cells wide in that direction, then the dimenionless lattice constant lPFC = Lx*dx/nx. This value doesn't need to be exact (the output coordinates will simply be scaled by a constant factor directly proportional to the error in the estimate for lPFC), but if it's way off, this can slow down execution or even result in failure. This is because the system is divided into bins (whose size is determined automatically based on lPFC and Lx, Ly, dx and dy) to speed up finding neighbors. There is, however, quite a lot of safety margin - just stay within, say, 10% of 4pi/sqrt(3). Next, the "true" lattice constant is specified in ångströms - substitute the approximate value of 2.46 Å with the equilibrium lattice constant given by your atomistic method. Finally, the names for the output files are specified. Former lists the carbon atoms by their number, their coordinates and the numbers of their neighbors. Latter lists the nonhexagonal carbon atom rings by the numbers of their member carbons.
 
-Note that this tool is inteded for PFC density fields relaxed far from melting where the defects are quite well defined and not very fuzzy. For such systems, each carbon tends to have three neighbors and only 5-, 6- and 7-membered carbon rings are observed.
+Note that this tool is inteded for PFC density fields relaxed far from melting where the defects are quite well defined and not very fuzzy. For such systems, each carbon tends to have three neighbors and only 5-, 6- and 7-membered carbon rings are observed. As a further remark, the strength of PFC is in producing topologically realistic configurations, but the exact atom positions obtained with this PFC code and the coordinator tool may not be perfect and some initial energy minimization may be needed.
 
 A plotter tool is also provided for visualization of the systems modeled. For a 512-by-512 case "dummy" it can be run as
 ```
@@ -86,7 +86,7 @@ The two sample input files demonstrate a quick two-stage process where crystalli
 
 ## Citing this code
 
-If you use this code, I kindly ask you to cite this repository and our paper [7] where we first employ a similar approach to generating the model systems.
+If you use this code, I kindly ask you to cite this repository and our paper [7] where we first employ a similar approach for generating the model systems.
 
 
 ## References
