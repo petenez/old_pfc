@@ -20,17 +20,19 @@ public class Coordinator {
 	private int Ny;
 	private double w;	// system dimensions (Å)
 	private double h;
+	private double lA;
 	private double ux;	// length units
 	private double uy;
 	private ArrayList<Point> carbons = new ArrayList<Point>();	// list of carbons
 	private ArrayList<Point> rings = new ArrayList<Point>();	// list of rings
 	private ArrayList<ArrayList<ArrayList<Point>>> bins;		// local minima bins
 	
-	public Coordinator(int Lx, int Ly, double dx, double dy, double l) {
+	public Coordinator(int Lx, int Ly, double dx, double dy, double lPFC, double lA) {
 		this.Lx = Lx;
 		this.Ly = Ly;
-		ux = dx*l;
-		uy = dy*l;
+		this.lA = lA;
+		ux = dx*lA/lPFC;
+		uy = dy*lA/lPFC;
 		w = Lx*ux;
 		h = Ly*uy;
 		this.Nx = (int)Math.ceil(0.25*w);	// bin size ~4 Å
@@ -211,6 +213,7 @@ public class Coordinator {
 						if(jth.k() <= ith.k()) continue;	// consider each triplet only once
 						// compute some vectors to find the triple point
 						ij = diff(jth.r(), ith.r());
+						if(V.abs(ij) > 2.0*lA) continue;	// closest neighbors can't be farther apart
 						ijp = V.x(ij);
 						for(int vk = -1; vk < 2; vk++) {	// again check bins
 							for(int uk = -1; uk < 2; uk++) {
@@ -222,6 +225,8 @@ public class Coordinator {
 									if(kth.k() <= jth.k()) continue;
 									// compute vectors
 									ik = diff(kth.r(), ith.r());
+									if(V.abs(ik) > 2.0*lA) continue;
+									if(V.abs(diff(kth.r(), jth.r())) > 2.0*lA) continue;
 									ikp = V.x(ik);
 									a = 0.5/ijp[0]*(ik[0]-ij[0]+ikp[0]/ikp[1]*(ij[1]-ik[1]))/(1.0-ijp[1]*ikp[0]/(ijp[0]*ikp[1]));
 									it = V.sum(V.mul(0.5, ij), V.mul(a, ijp));	// position of triple point (from ith minimum)
@@ -342,7 +347,7 @@ public class Coordinator {
 		double lA = Double.parseDouble(args[6]);
 		String cout = args[7];
 		String nhout = args[8];
-		Coordinator coordinator = new Coordinator(Lx, Ly, dx, dy, lA/lPFC);
+		Coordinator coordinator = new Coordinator(Lx, Ly, dx, dy, lPFC, lA);
 		coordinator.load(input);
 		coordinator.write_carbons(cout);
 		coordinator.write_nonhexagons(nhout);
