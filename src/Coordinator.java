@@ -155,7 +155,7 @@ public class Coordinator {
 				// very low to ensure uniqueness of current local minimum
 				psi[j][i] -= 1000.0;
 				for(int n = 0; n < 8; n++) {
-					psi[wy(j+v[n])][wx(i+u[n])] -= 100.0;
+					psi[wy(j+v[n])][wx(i+u[n])] -= 1000.0;
 				}
 				// use quadratic interpolation to estimate more accurate location
 				double x0 = i-1;	// neighbor
