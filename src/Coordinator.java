@@ -153,9 +153,9 @@ public class Coordinator {
 				// density data might have limited precision whereby neighboring grid points
 				// might have identical values, set current density and those of neighbors
 				// very low to ensure uniqueness of current local minimum
-				psi[j][i] -= 1000.0;
+				psi[j][i] -= 1001.0;
 				for(int n = 0; n < 8; n++) {
-					psi[wy(j+v[n])][wx(i+u[n])] -= 999.0;
+					psi[wy(j+v[n])][wx(i+u[n])] -= 1000.0;
 				}
 				// use quadratic interpolation to estimate more accurate location
 				double x0 = i-1;	// neighbor
@@ -165,7 +165,7 @@ public class Coordinator {
 				double x12 = x1*x1;
 				double x22 = x2*x2;
 				double p0 = psi[j][wx(i-1)];	// periodic boundary conditions
-				double p1 = psi[j][i];
+				double p1 = psi[j][i] + 1.0;
 				double p2 = psi[j][wx(i+1)];
 				double A = (x2*(p1-p0)+x1*(p0-p2)+x0*(p2-p1));	// y = A*x^2 + B*x + C
 				double B = (x22*(p0-p1)+x12*(p2-p0)+x02*(p1-p2));
@@ -178,7 +178,7 @@ public class Coordinator {
 				x12 = x1*x1;
 				x22 = x2*x2;
 				p0 = psi[wy(j-1)][i];
-				p1 = psi[j][i];
+				p1 = psi[j][i] + 1.0;
 				p2 = psi[wy(j+1)][i];
 				A = (x2*(p1-p0)+x1*(p0-p2)+x0*(p2-p1));
 				B = (x22*(p0-p1)+x12*(p2-p0)+x02*(p1-p2));
